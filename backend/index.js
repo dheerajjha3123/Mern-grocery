@@ -8,8 +8,16 @@ const cookieParser = require("cookie-parser");
 
 const app = express();
 app.use(cookieParser());
+const allowedOrigins = ['https://grocery-store-whzd.vercel.app'];
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL, 
+  origin: (origin, callback) => {
+    if (allowedOrigins.includes(origin) || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   credentials: true,
 }));
